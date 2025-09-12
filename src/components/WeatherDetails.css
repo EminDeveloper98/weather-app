@@ -1,0 +1,39 @@
+.weather-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: white;
+  font-size: 18px;
+}
+
+.weather-image {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 15px;
+}
+
+.forecast-footer {
+  margin-top: 20px;
+  text-align: center;
+  font-style: italic;
+  font-size: 16px;
+  color: #ddd;
+}
+
+.detail-item {
+  border-bottom: 1px solid #eee;
+  padding: 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 18px;
+  opacity: 0.9;
+}
+
+.min-temp svg {
+  color: #4da6ff; /* голубой для min */
+}
+
+.max-temp svg {
+  color: #ff4d4d; /* красный для max */
+}

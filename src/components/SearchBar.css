@@ -1,0 +1,37 @@
+.search-bar {
+  display: flex;
+  margin-bottom: 24px;
+  gap: 0;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.6); /* видимый бордер */
+  border-radius: 4px 0 0 4px;
+  font-size: 16px;
+  background-color: transparent; /* полностью прозрачный */
+  color: white;
+  outline: none;
+}
+
+.search-bar input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.search-bar button {
+  padding: 12px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-left: none; /* чтобы бордер не дублировался с инпутом */
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  font-weight: 600;
+  background-color: transparent; /* полностью прозрачный */
+  color: white;
+  transition: color 0.3s, transform 0.2s;
+}
+
+.search-bar button:hover {
+  color: #ffd; /* чуть светлее при наведении */
+  transform: scale(1.05);
+}

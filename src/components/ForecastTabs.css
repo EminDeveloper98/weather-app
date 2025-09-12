@@ -1,0 +1,41 @@
+.forecast-tabs {
+  margin-top: 20px;
+  color: white;
+}
+
+.tabs-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+
+.tabs-header button {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  padding: 8px 16px;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+.tabs-header button.active {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.tabs-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+}
+
+.hour-item,
+.day-item {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 10px 15px;
+  border-radius: 8px;
+  min-width: 70px;
+  text-align: center;
+}
