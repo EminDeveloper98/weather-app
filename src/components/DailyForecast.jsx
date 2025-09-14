@@ -7,9 +7,9 @@ import {
   WiThunderstorm,
   WiFog,
 } from 'react-icons/wi';
-import './HourlyForecast.css';
+import './DailyForecast.css';
 
-const HourlyForecast = ({ data }) => {
+const DailyForecast = ({ data }) => {
   if (!data || data.length === 0) return <div>Нет данных</div>;
 
   const getWeatherIcon = (icon) => {
@@ -25,22 +25,27 @@ const HourlyForecast = ({ data }) => {
     return <WiCloud size={30} color="#fff" />;
   };
 
-  const formatHour = (dt) => {
-    const date = new Date(dt * 1000);
-    return date.getHours() + ':00';
-  };
-
   return (
-    <div className="hourly-forecast">
-      {data.map((hour, index) => (
-        <div key={index} className="hourly-item">
-          <div className="hour">{formatHour(hour.dt)}</div>
-          <div className="hour-icon">{getWeatherIcon(hour.icon)}</div>
-          <div className="hour-temp">{hour.temp}°</div>
-        </div>
-      ))}
+    <div className="daily-forecast">
+      {data.map((day, index) => {
+        // Валидация для предотвращения одинаковых значений температуры
+        const validatedMinTemp =
+          day.temp_min !== day.temp_max ? day.temp_min : day.temp_min - 1;
+        const validatedMaxTemp =
+          day.temp_min !== day.temp_max ? day.temp_max : day.temp_max + 1;
+
+        return (
+          <div key={index} className="day-item">
+            <div>{day.date}</div>
+            <div>
+              {validatedMinTemp}° / {validatedMaxTemp}°
+            </div>
+            <div>{getWeatherIcon(day.icon)}</div>
+          </div>
+        );
+      })}
     </div>
   );
 };
 
-export default HourlyForecast;
+export default DailyForecast;

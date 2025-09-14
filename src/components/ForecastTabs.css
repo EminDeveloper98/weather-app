@@ -1,6 +1,8 @@
 .forecast-tabs {
   margin-top: 20px;
   color: white;
+  position: relative;
+  z-index: 5;
 }
 
 .tabs-header {
@@ -8,6 +10,8 @@
   justify-content: center;
   margin-bottom: 10px;
   gap: 10px;
+  position: relative;
+  z-index: 10;
 }
 
 .tabs-header button {
@@ -18,6 +22,14 @@
   cursor: pointer;
   border-radius: 5px;
   font-weight: 500;
+  position: relative;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.tabs-header button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
 }
 
 .tabs-header button.active {
