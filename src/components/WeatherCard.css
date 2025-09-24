@@ -112,3 +112,13 @@
     transform: translateY(-10px);
   }
 }
+
+.footer {
+  position: absolute; /* или fixed, если хочешь, чтобы всегда был внизу экрана */
+  bottom: 10px;
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-size: 14px;
+  z-index: 5;
+}

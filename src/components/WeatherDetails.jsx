@@ -6,11 +6,16 @@ import {
   WiThermometer,
 } from 'react-icons/wi';
 
-const WeatherDetails = ({ humidity, wind, clouds, temp_min, temp_max }) => {
+const WeatherDetails = ({
+  humidity,
+  wind,
+  clouds,
+  temp_min,
+  temp_max,
+  formatTemp,
+}) => {
   const validatedMinTemp = temp_min !== temp_max ? temp_min : temp_min - 1;
   const validatedMaxTemp = temp_min !== temp_max ? temp_max : temp_max + 1;
-
-  const formatTemp = (temp) => (temp > 0 ? `+${temp}` : temp);
 
   return (
     <div className="weather-details">

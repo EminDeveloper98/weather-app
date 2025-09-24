@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import './WeatherCard.css';
 import SearchBar from './SearchBar';
 import WeatherDetails from './WeatherDetails';
-import ForecastTabs from './ForecastTabs';
 
 import {
   WiDaySunny,
@@ -27,9 +26,6 @@ import defaultVideo from '../assets/videos/default.mp4';
 const WeatherCard = () => {
   const [city, setCity] = useState('');
   const [weatherData, setWeatherData] = useState(null);
-  const [hourlyData, setHourlyData] = useState([]);
-  const [dailyData, setDailyData] = useState([]);
-  const [activeTab, setActiveTab] = useState('hourly');
 
   const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 
@@ -41,7 +37,11 @@ const WeatherCard = () => {
     }
   }, [API_KEY]);
 
-  // Текущая погода
+  // Формат температуры с +
+  const formatTemp = (temp) =>
+    temp > 0 ? `+${Math.round(temp)}` : Math.round(temp);
+
+  // Получение текущей погоды
   useEffect(() => {
     if (!city || !API_KEY) return;
 
@@ -62,72 +62,28 @@ const WeatherCard = () => {
 
           setWeatherData({
             temp: Math.round(data.main.temp),
-            temp_min: temp_min,
-            temp_max: temp_max,
+            temp_min,
+            temp_max,
             humidity: data.main.humidity,
             wind: data.wind.speed,
             clouds: data.clouds.all,
             name: data.name,
-            date: new Date().toLocaleString(),
+            date: new Date().toLocaleDateString('ru-RU', {
+              day: 'numeric',
+              month: 'short',
+              weekday: 'short',
+            }),
             icon: data.weather[0].icon,
             coord: data.coord,
           });
         } else {
           setWeatherData(null);
-          setHourlyData([]);
-          setDailyData([]);
         }
       })
       .catch(() => {
         setWeatherData(null);
-        setHourlyData([]);
-        setDailyData([]);
       });
   }, [city, API_KEY]);
-
-  // Почасовой и ежедневный прогноз
-  useEffect(() => {
-    if (!weatherData?.coord) return;
-
-    const { lat, lon } = weatherData.coord;
-    fetch(
-      `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&appid=${API_KEY}&units=metric`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        const hourly = data.hourly.slice(0, 12).map((h) => ({
-          dt: h.dt,
-          temp: Math.round(h.temp),
-          icon: h.weather[0].icon,
-        }));
-        setHourlyData(hourly);
-
-        const daily = data.daily.slice(0, 7).map((d) => {
-          let temp_min = Math.round(d.temp.min);
-          let temp_max = Math.round(d.temp.max);
-
-          if (temp_min === temp_max) {
-            const avgTemp = Math.round((temp_min + temp_max) / 2);
-            temp_min = Math.max(temp_min - 2, avgTemp - 3);
-            temp_max = Math.min(temp_max + 2, avgTemp + 3);
-          }
-
-          return {
-            date: new Date(d.dt * 1000).toLocaleDateString('ru-RU', {
-              weekday: 'short',
-            }),
-            temp_min: temp_min,
-            temp_max: temp_max,
-            icon: d.weather[0].icon,
-          };
-        });
-        setDailyData(daily);
-      })
-      .catch(() => {
-        setHourlyData([]);
-        setDailyData([]);
-      });
-  }, [weatherData, API_KEY]);
 
   // Иконки
   const getWeatherIcon = (icon) => {
@@ -164,9 +120,6 @@ const WeatherCard = () => {
 
   const media = getBackgroundMedia();
 
-  // Форматирование температуры с явным +
-  const formatTemp = (temp) => (temp > 0 ? `+${temp}` : temp);
-
   return (
     <div className="weather-container">
       {media.type === 'video' && (
@@ -193,16 +146,14 @@ const WeatherCard = () => {
           {weatherData === null && city
             ? 'Город не найден'
             : !city
-            ? 'search 🌤'
+            ? 'Think I should take an umbrella today?'
             : weatherData.name}
         </div>
-        <div className="date">{weatherData ? weatherData.date : ''}</div>
         <div className="weather-icon">{getWeatherIcon(weatherData?.icon)}</div>
       </div>
 
       <div className="right-panel">
         <SearchBar onSearch={setCity} />
-
         {weatherData && (
           <WeatherDetails
             humidity={weatherData.humidity}
@@ -210,16 +161,14 @@ const WeatherCard = () => {
             clouds={weatherData.clouds}
             temp_min={weatherData.temp_min}
             temp_max={weatherData.temp_max}
+            formatTemp={formatTemp}
           />
         )}
-
-        <ForecastTabs
-          activeTab={activeTab}
-          setActiveTab={(tab) => setActiveTab(tab)}
-          hourlyData={hourlyData}
-          dailyData={dailyData}
-        />
       </div>
+
+      <footer className="footer">
+        &copy; {new Date().getFullYear()} Все права защищены
+      </footer>
     </div>
   );
 };
