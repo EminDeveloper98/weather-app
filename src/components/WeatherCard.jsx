@@ -6,8 +6,8 @@ import WeatherDetails from './WeatherDetails';
 
 import {
   WiDaySunny,
-  WiCloud,
-  WiRain,
+  WiCloudy,
+  WiRainMix,
   WiSnow,
   WiThunderstorm,
   WiFog,
@@ -19,7 +19,7 @@ import bgWeather from '../assets/bg-weather.jpg';
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 
 const WeatherCard = () => {
-  const [city, setCity] = useState('London'); // город по умолчанию
+  const [city, setCity] = useState('London');
   const [weatherData, setWeatherData] = useState(null);
   const [currentTime, setCurrentTime] = useState('');
   const [error, setError] = useState(false);
@@ -27,25 +27,58 @@ const WeatherCard = () => {
   const formatTemp = (temp) =>
     temp > 0 ? `+${Math.round(temp)}` : Math.round(temp);
 
-  // функция для выбора иконки
   const getWeatherIcon = (icon) => {
     if (!icon) return null;
     if (icon.startsWith('01'))
       return <WiDaySunny size={80} className="sun-icon" />;
     if (icon.startsWith('02') || icon.startsWith('03') || icon.startsWith('04'))
-      return <WiCloud size={80} className="cloud-icon" />;
+      return <WiCloudy size={80} className="cloud-icon" />;
     if (icon.startsWith('09') || icon.startsWith('10'))
-      return <WiRain size={80} className="rain-icon" />;
+      return <WiRainMix size={80} className="rain-icon" />;
     if (icon.startsWith('11'))
-      return <WiThunderstorm size={80} className="rain-icon" />;
+      return <WiThunderstorm size={80} className="thunder-icon" />;
     if (icon.startsWith('13'))
-      return <WiSnow size={80} className="rain-icon" />;
-    if (icon.startsWith('50'))
-      return <WiFog size={80} className="cloud-icon" />;
-    return <WiCloud size={80} className="cloud-icon" />;
+      return <WiSnow size={80} className="snow-icon" />;
+    if (icon.startsWith('50')) return <WiFog size={80} className="fog-icon" />;
+
+    return <WiCloudy size={80} className="cloud-icon" />;
   };
 
-  // обновление времени каждую секунду
+  // ...все импорты остаются как раньше
+
+  const getFullWeatherDescription = (main) => {
+    if (!main) return '';
+    switch (main.toLowerCase()) {
+      case 'clouds':
+        return `Cloudy throughout the day. 
+Morning showers stopped by noon. 
+Afternoon remains overcast.`;
+      case 'rain':
+        return `Rain expected in the morning. 
+Afternoon showers continue. 
+Evening rain eases.`;
+      case 'snow':
+        return `Snow in the morning. 
+Light snow in the afternoon. 
+Clears by evening.`;
+      case 'clear':
+        return `Sunny all day. 
+Evening gets cooler. 
+No precipitation expected.`;
+      case 'thunderstorm':
+        return `Thunderstorms in the morning. 
+Afternoon less intense. 
+Clears by night.`;
+      case 'mist':
+      case 'fog':
+        return `Foggy in the morning. 
+Clears by afternoon. 
+Evening mist returns.`;
+      default:
+        return `Weather varies throughout the day.`;
+    }
+  };
+
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
@@ -65,7 +98,6 @@ const WeatherCard = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // загрузка погоды при смене города
   useEffect(() => {
     const fetchWeather = async () => {
       try {
@@ -91,6 +123,7 @@ const WeatherCard = () => {
           wind: data.wind.speed,
           clouds: data.clouds.all,
           icon: data.weather[0].icon,
+          mainDescription: data.weather[0].main,
           name: data.name,
         });
       } catch {
@@ -117,7 +150,7 @@ const WeatherCard = () => {
 
       <div className="left-panel">
         {error ? (
-          <div style={{ fontSize: '36px', color: 'white' }}>City not found</div>
+          <div className="status-message">City not found</div>
         ) : weatherData ? (
           <>
             <div className="temperature">{formatTemp(weatherData.temp)}°</div>
@@ -130,26 +163,31 @@ const WeatherCard = () => {
             </div>
           </>
         ) : (
-          <div style={{ fontSize: '36px', color: 'white' }}>Loading...</div>
+          <div className="status-message">Loading...</div>
         )}
       </div>
 
       <div className="right-panel">
         <SearchBar onSearch={setCity} />
         {weatherData && !error && (
-          <WeatherDetails
-            humidity={weatherData.humidity}
-            wind={weatherData.wind}
-            clouds={weatherData.clouds}
-            temp_min={weatherData.temp_min}
-            temp_max={weatherData.temp_max}
-            formatTemp={formatTemp}
-          />
+          <>
+            <WeatherDetails
+              humidity={weatherData.humidity}
+              wind={weatherData.wind}
+              clouds={weatherData.clouds}
+              temp_min={weatherData.temp_min}
+              temp_max={weatherData.temp_max}
+              formatTemp={formatTemp}
+            />
+            <div className="weather-full-description">
+              {getFullWeatherDescription(weatherData.mainDescription)}
+            </div>
+          </>
         )}
       </div>
 
       <footer className="footer">
-        &copy; {new Date().getFullYear()} Все права защищены
+        &copy; {new Date().getFullYear()} All rights reserved
       </footer>
     </div>
   );

@@ -176,3 +176,21 @@
   z-index: 10;
   object-fit: contain;
 }
+.weather-full-description {
+  margin-top: 20px;
+  font-size: 18px;
+  line-height: 1.3;
+  color: #fff;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+}
+.status-message {
+  position: fixed; /* фиксированное относительно окна браузера */
+  top: 62%; /* чуть ниже центра */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 46px;
+  color: white;
+  text-align: center;
+  z-index: 10;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+}
