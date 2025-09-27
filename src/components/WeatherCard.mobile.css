@@ -1,0 +1,49 @@
+@media (max-width: 768px) {
+  .weather-container {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+  }
+
+  .left-panel {
+    flex: none;
+    height: 35vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* выравниваем по центру по вертикали */
+    align-items: center; /* выравниваем по центру по горизонтали */
+    text-align: center;
+    gap: 10px; /* расстояние между температурой, городом и временем */
+  }
+
+  .right-panel {
+    flex: none;
+    height: 65vh;
+    padding: 20px;
+    backdrop-filter: blur(5px);
+    background-color: rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  /* размеры текста и цифр под мобильные устройства */
+  .temperature {
+    font-size: 60px; /* чуть больше, чем 48px */
+  }
+
+  .location {
+    font-size: 28px; /* увеличено для читаемости */
+  }
+
+  .current-time {
+    font-size: 18px; /* время под городом */
+    margin-top: 5px;
+  }
+
+  .weather-icon {
+    margin-top: 10px;
+    font-size: 60px; /* увеличиваем иконку для мобильных */
+  }
+}

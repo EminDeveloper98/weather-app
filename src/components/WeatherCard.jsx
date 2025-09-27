@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import './WeatherCard.css';
+import './WeatherCard.mobile.css';
 import SearchBar from './SearchBar';
 import WeatherDetails from './WeatherDetails';
 
@@ -12,149 +13,130 @@ import {
   WiFog,
 } from 'react-icons/wi';
 
-// Фоновые картинки
-import clearImg from '../assets/clear.jpg';
-import cloudsImg from '../assets/clouds.jpg';
-import rainImg from '../assets/rain.jpg';
-import snowImg from '../assets/snow.jpg';
-import thunderImg from '../assets/thunder.jpg';
-import fogImg from '../assets/fog.jpg';
+import weatherIcon from '../assets/icons/weathericon.png';
+import bgWeather from '../assets/bg-weather.jpg';
 
-// Видео по умолчанию
-import defaultVideo from '../assets/videos/default.mp4';
+const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 
 const WeatherCard = () => {
-  const [city, setCity] = useState('');
+  const [city, setCity] = useState('London'); // город по умолчанию
   const [weatherData, setWeatherData] = useState(null);
+  const [currentTime, setCurrentTime] = useState('');
+  const [error, setError] = useState(false);
 
-  const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
-
-  useEffect(() => {
-    if (!API_KEY || API_KEY === 'YOUR_API_KEY') {
-      console.error(
-        'API ключ не настроен! Создайте файл .env с VITE_WEATHER_API_KEY=ваш_ключ'
-      );
-    }
-  }, [API_KEY]);
-
-  // Формат температуры с +
   const formatTemp = (temp) =>
     temp > 0 ? `+${Math.round(temp)}` : Math.round(temp);
 
-  // Получение текущей погоды
-  useEffect(() => {
-    if (!city || !API_KEY) return;
-
-    fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.cod === 200) {
-          let temp_min = Math.round(data.main.temp_min);
-          let temp_max = Math.round(data.main.temp_max);
-
-          if (temp_min === temp_max) {
-            const currentTemp = Math.round(data.main.temp);
-            temp_min = Math.max(temp_min - 2, currentTemp - 3);
-            temp_max = Math.min(temp_max + 2, currentTemp + 3);
-          }
-
-          setWeatherData({
-            temp: Math.round(data.main.temp),
-            temp_min,
-            temp_max,
-            humidity: data.main.humidity,
-            wind: data.wind.speed,
-            clouds: data.clouds.all,
-            name: data.name,
-            date: new Date().toLocaleDateString('ru-RU', {
-              day: 'numeric',
-              month: 'short',
-              weekday: 'short',
-            }),
-            icon: data.weather[0].icon,
-            coord: data.coord,
-          });
-        } else {
-          setWeatherData(null);
-        }
-      })
-      .catch(() => {
-        setWeatherData(null);
-      });
-  }, [city, API_KEY]);
-
-  // Иконки
+  // функция для выбора иконки
   const getWeatherIcon = (icon) => {
     if (!icon) return null;
     if (icon.startsWith('01'))
-      return <WiDaySunny size={40} className="sun-icon" />;
+      return <WiDaySunny size={80} className="sun-icon" />;
     if (icon.startsWith('02') || icon.startsWith('03') || icon.startsWith('04'))
-      return <WiCloud size={40} className="cloud-icon" />;
+      return <WiCloud size={80} className="cloud-icon" />;
     if (icon.startsWith('09') || icon.startsWith('10'))
-      return <WiRain size={40} className="rain-icon" />;
+      return <WiRain size={80} className="rain-icon" />;
     if (icon.startsWith('11'))
-      return <WiThunderstorm size={40} className="rain-icon" />;
+      return <WiThunderstorm size={80} className="rain-icon" />;
     if (icon.startsWith('13'))
-      return <WiSnow size={40} className="rain-icon" />;
+      return <WiSnow size={80} className="rain-icon" />;
     if (icon.startsWith('50'))
-      return <WiFog size={40} className="cloud-icon" />;
-    return <WiCloud size={40} className="cloud-icon" />;
+      return <WiFog size={80} className="cloud-icon" />;
+    return <WiCloud size={80} className="cloud-icon" />;
   };
 
-  // Фон
-  const getBackgroundMedia = () => {
-    if (!weatherData) return { type: 'video', src: defaultVideo };
-    const icon = weatherData.icon;
-    if (!icon || icon.startsWith('01')) return { type: 'image', src: clearImg };
-    if (icon.startsWith('02') || icon.startsWith('03') || icon.startsWith('04'))
-      return { type: 'image', src: cloudsImg };
-    if (icon.startsWith('09') || icon.startsWith('10'))
-      return { type: 'image', src: rainImg };
-    if (icon.startsWith('11')) return { type: 'image', src: thunderImg };
-    if (icon.startsWith('13')) return { type: 'image', src: snowImg };
-    if (icon.startsWith('50')) return { type: 'image', src: fogImg };
-    return { type: 'image', src: clearImg };
-  };
+  // обновление времени каждую секунду
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const options = {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'short',
+        year: '2-digit',
+      };
+      const dateString = now.toLocaleDateString('en-US', options);
+      setCurrentTime(`${hours}:${minutes} - ${dateString}`);
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
-  const media = getBackgroundMedia();
+  // загрузка погоды при смене города
+  useEffect(() => {
+    const fetchWeather = async () => {
+      try {
+        setError(false);
+        const response = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
+            city
+          )}&units=metric&appid=${API_KEY}`
+        );
+        const data = await response.json();
+
+        if (data.cod !== 200) {
+          setWeatherData(null);
+          setError(true);
+          return;
+        }
+
+        setWeatherData({
+          temp: data.main.temp,
+          temp_min: data.main.temp_min,
+          temp_max: data.main.temp_max,
+          humidity: data.main.humidity,
+          wind: data.wind.speed,
+          clouds: data.clouds.all,
+          icon: data.weather[0].icon,
+          name: data.name,
+        });
+      } catch {
+        setWeatherData(null);
+        setError(true);
+      }
+    };
+
+    fetchWeather();
+  }, [city]);
 
   return (
     <div className="weather-container">
-      {media.type === 'video' && (
-        <video className="bg-video" autoPlay loop muted>
-          <source src={media.src} type="video/mp4" />
-        </video>
-      )}
-      {media.type === 'image' && (
-        <div
-          className="bg-video"
-          style={{
-            backgroundImage: `url(${media.src})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        />
-      )}
+      <div
+        className="bg-video"
+        style={{
+          backgroundImage: `url(${bgWeather})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      />
+
+      <img src={weatherIcon} alt="logo" className="logo-icon" />
 
       <div className="left-panel">
-        <div className="temperature">
-          {weatherData ? `${formatTemp(weatherData.temp)}°` : ''}
-        </div>
-        <div className="location">
-          {weatherData === null && city
-            ? 'Город не найден'
-            : !city
-            ? 'Think I should take an umbrella today?'
-            : weatherData.name}
-        </div>
-        <div className="weather-icon">{getWeatherIcon(weatherData?.icon)}</div>
+        {error ? (
+          <div style={{ fontSize: '36px', color: 'white' }}>City not found</div>
+        ) : weatherData ? (
+          <>
+            <div className="temperature">{formatTemp(weatherData.temp)}°</div>
+            <div className="city-time">
+              <div className="location">{weatherData.name}</div>
+              <div className="current-time">{currentTime}</div>
+            </div>
+            <div className="weather-icon">
+              {getWeatherIcon(weatherData.icon)}
+            </div>
+          </>
+        ) : (
+          <div style={{ fontSize: '36px', color: 'white' }}>Loading...</div>
+        )}
       </div>
 
       <div className="right-panel">
         <SearchBar onSearch={setCity} />
-        {weatherData && (
+        {weatherData && !error && (
           <WeatherDetails
             humidity={weatherData.humidity}
             wind={weatherData.wind}
