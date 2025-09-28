@@ -41,6 +41,21 @@
 .city-time {
   display: flex;
   flex-direction: column; /* город и время друг под другом */
+  width: 100%; /* теперь Textfit учитывает ширину */
+  max-width: 400px; /* ограничение, чтобы не раздувало слишком сильно */
+}
+
+/* Подстройка размера текста для Textfit */
+.location {
+  font-weight: 400;
+  color: #fff;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+
+  display: block;
+  width: 100%;
+  line-height: 1.1;
+  white-space: nowrap; /* текст в одну строку */
+  overflow: hidden; /* скрываем выходящий текст */
 }
 
 .current-time {
@@ -55,7 +70,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: scale(2); /* увеличиваем в 2 раза */
+  transform: scale(2);
   margin-top: 10px;
 }
 
@@ -108,13 +123,6 @@
 .temperature {
   font-size: 128px;
   font-weight: 400;
-}
-
-.location {
-  font-size: 66px;
-  font-weight: 400;
-  color: #fff;
-  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
 }
 
 .sun-icon {
@@ -176,6 +184,7 @@
   z-index: 10;
   object-fit: contain;
 }
+
 .weather-full-description {
   margin-top: 20px;
   font-size: 18px;
@@ -183,9 +192,10 @@
   color: #fff;
   text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
 }
+
 .status-message {
-  position: fixed; /* фиксированное относительно окна браузера */
-  top: 62%; /* чуть ниже центра */
+  position: fixed;
+  top: 62%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 46px;

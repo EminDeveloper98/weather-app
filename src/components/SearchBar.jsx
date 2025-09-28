@@ -1,27 +1,138 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './SearchBar.css';
 
-const SearchBar = ({ onSearch }) => {
+const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
+
+const SearchBar = ({ onSearch, onInputChange }) => {
   const [input, setInput] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
+
+  const containerRef = useRef(null);
+
+  // Получение подсказок
+  useEffect(() => {
+    if (!input) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      setActiveIndex(-1);
+      return;
+    }
+
+    const timeoutId = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(
+            input
+          )}&limit=5&appid=${API_KEY}`
+        );
+        const data = await res.json();
+        setSuggestions(data);
+        setShowSuggestions(true);
+        setActiveIndex(-1);
+      } catch {
+        setSuggestions([]);
+        setShowSuggestions(false);
+        setActiveIndex(-1);
+      }
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [input]);
+
+  // Клик вне компонента закрывает подсказки
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setShowSuggestions(false);
+        setActiveIndex(-1);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSelect = (city) => {
+    setShowSuggestions(false);
+    setActiveIndex(-1);
+    onSearch(city.name);
+    setInput(''); // очищаем поле
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (input.trim()) {
+      setShowSuggestions(false);
+      setActiveIndex(-1);
       onSearch(input.trim());
       setInput('');
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (!showSuggestions || suggestions.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActiveIndex((prev) => (prev + 1) % suggestions.length);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActiveIndex(
+        (prev) => (prev - 1 + suggestions.length) % suggestions.length
+      );
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (activeIndex >= 0) {
+        handleSelect(suggestions[activeIndex]);
+      } else {
+        handleSearch(e);
+      }
+    }
+  };
+
   return (
-    <form className="search-bar" onSubmit={handleSearch}>
-      <input
-        type="text"
-        placeholder="Enter city"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-      />
-      <button type="submit">Search</button>
-    </form>
+    <div
+      className="search-bar-container"
+      ref={containerRef}
+      style={{ position: 'relative' }}
+    >
+      <form className="search-bar" onSubmit={handleSearch}>
+        <input
+          type="text"
+          placeholder="Enter city"
+          value={input}
+          onChange={(e) => {
+            setInput(e.target.value);
+            if (onInputChange) onInputChange(e.target.value);
+          }}
+          onKeyDown={handleKeyDown}
+        />
+        <button type="submit">Search</button>
+      </form>
+
+      {showSuggestions && suggestions.length > 0 && (
+        <ul className="suggestions-list">
+          {suggestions.map((city, index) => {
+            const region = city.state ? `, ${city.state}` : '';
+            const country = city.country ? `, ${city.country}` : '';
+            return (
+              <li
+                key={index}
+                onClick={() => handleSelect(city)}
+                className={`suggestion-item ${
+                  index === activeIndex ? 'active' : ''
+                }`}
+              >
+                {city.name}
+                {region}
+                {country}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
   );
 };
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Textfit } from 'react-textfit';
 import './WeatherCard.css';
 import './WeatherCard.mobile.css';
 import SearchBar from './SearchBar';
@@ -23,73 +24,59 @@ const WeatherCard = () => {
   const [weatherData, setWeatherData] = useState(null);
   const [currentTime, setCurrentTime] = useState('');
   const [error, setError] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  // Проверка мобильного экрана
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const formatTemp = (temp) =>
     temp > 0 ? `+${Math.round(temp)}` : Math.round(temp);
 
   const getWeatherIcon = (icon) => {
     if (!icon) return null;
-    if (icon.startsWith('01'))
-      return <WiDaySunny size={80} className="sun-icon" />;
+    if (icon.startsWith('01')) return <WiDaySunny size={80} />;
     if (icon.startsWith('02') || icon.startsWith('03') || icon.startsWith('04'))
-      return <WiCloudy size={80} className="cloud-icon" />;
+      return <WiCloudy size={80} />;
     if (icon.startsWith('09') || icon.startsWith('10'))
-      return <WiRainMix size={80} className="rain-icon" />;
-    if (icon.startsWith('11'))
-      return <WiThunderstorm size={80} className="thunder-icon" />;
-    if (icon.startsWith('13'))
-      return <WiSnow size={80} className="snow-icon" />;
-    if (icon.startsWith('50')) return <WiFog size={80} className="fog-icon" />;
-
-    return <WiCloudy size={80} className="cloud-icon" />;
+      return <WiRainMix size={80} />;
+    if (icon.startsWith('11')) return <WiThunderstorm size={80} />;
+    if (icon.startsWith('13')) return <WiSnow size={80} />;
+    if (icon.startsWith('50')) return <WiFog size={80} />;
+    return <WiCloudy size={80} />;
   };
-
-  // ...все импорты остаются как раньше
 
   const getFullWeatherDescription = (main) => {
     if (!main) return '';
     switch (main.toLowerCase()) {
       case 'clouds':
-        return `Cloudy throughout the day. 
-Morning showers stopped by noon. 
-Afternoon remains overcast.`;
+        return `Cloudy throughout the day. Morning showers stopped by noon. Afternoon remains overcast.`;
       case 'rain':
-        return `Rain expected in the morning. 
-Afternoon showers continue. 
-Evening rain eases.`;
+        return `Rain expected in the morning. Afternoon showers continue. Evening rain eases.`;
       case 'snow':
-        return `Snow in the morning. 
-Light snow in the afternoon. 
-Clears by evening.`;
+        return `Snow in the morning. Light snow in the afternoon. Clears by evening.`;
       case 'clear':
-        return `Sunny all day. 
-Evening gets cooler. 
-No precipitation expected.`;
+        return `Sunny all day. Evening gets cooler. No precipitation expected.`;
       case 'thunderstorm':
-        return `Thunderstorms in the morning. 
-Afternoon less intense. 
-Clears by night.`;
+        return `Thunderstorms in the morning. Afternoon less intense. Clears by night.`;
       case 'mist':
       case 'fog':
-        return `Foggy in the morning. 
-Clears by afternoon. 
-Evening mist returns.`;
+        return `Foggy in the morning. Clears by afternoon. Evening mist returns.`;
       default:
         return `Weather varies throughout the day.`;
     }
   };
 
+  // Время
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
       const hours = String(now.getHours()).padStart(2, '0');
       const minutes = String(now.getMinutes()).padStart(2, '0');
-      const options = {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'short',
-        year: '2-digit',
-      };
+      const options = { weekday: 'long', day: 'numeric', month: 'short' };
       const dateString = now.toLocaleDateString('en-US', options);
       setCurrentTime(`${hours}:${minutes} - ${dateString}`);
     };
@@ -98,16 +85,19 @@ Evening mist returns.`;
     return () => clearInterval(interval);
   }, []);
 
+  // Получение погоды
   useEffect(() => {
+    if (!city) return;
+
     const fetchWeather = async () => {
       try {
         setError(false);
-        const response = await fetch(
+        const res = await fetch(
           `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
             city
           )}&units=metric&appid=${API_KEY}`
         );
-        const data = await response.json();
+        const data = await res.json();
 
         if (data.cod !== 200) {
           setWeatherData(null);
@@ -137,6 +127,13 @@ Evening mist returns.`;
 
   return (
     <div className="weather-container">
+      {/* Мобильный статус сверху */}
+      {isMobile && (error || !weatherData) && (
+        <div className="mobile-status">
+          {error ? 'City not found' : 'Loading...'}
+        </div>
+      )}
+
       <div
         className="bg-video"
         style={{
@@ -149,26 +146,32 @@ Evening mist returns.`;
       <img src={weatherIcon} alt="logo" className="logo-icon" />
 
       <div className="left-panel">
-        {error ? (
-          <div className="status-message">City not found</div>
-        ) : weatherData ? (
+        {weatherData && !error && (
           <>
             <div className="temperature">{formatTemp(weatherData.temp)}°</div>
             <div className="city-time">
-              <div className="location">{weatherData.name}</div>
+              <Textfit mode="single" max={66} min={24} className="location">
+                {weatherData.name}
+              </Textfit>
               <div className="current-time">{currentTime}</div>
             </div>
             <div className="weather-icon">
               {getWeatherIcon(weatherData.icon)}
             </div>
           </>
-        ) : (
-          <div className="status-message">Loading...</div>
         )}
       </div>
 
       <div className="right-panel">
-        <SearchBar onSearch={setCity} />
+        <SearchBar
+          onSearch={(newCity) => {
+            setCity(newCity);
+            setWeatherData(null); // скрываем старые данные при поиске
+          }}
+          onInputChange={() => {
+            setWeatherData(null); // скрываем данные при вводе нового текста
+          }}
+        />
         {weatherData && !error && (
           <>
             <WeatherDetails

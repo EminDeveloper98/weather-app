@@ -22,7 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
 # Environment variables
 .env
-#video files
+
+# Video files
 src/assets/videos/default.mp4

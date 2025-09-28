@@ -7,10 +7,10 @@
 .search-bar input {
   flex: 1;
   padding: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.6); /* видимый бордер */
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 4px 0 0 4px;
   font-size: 16px;
-  background-color: transparent; /* полностью прозрачный */
+  background-color: transparent;
   color: white;
   outline: none;
 }
@@ -22,16 +22,45 @@
 .search-bar button {
   padding: 12px 20px;
   border: 1px solid rgba(255, 255, 255, 0.6);
-  border-left: none; /* чтобы бордер не дублировался с инпутом */
+  border-left: none;
   border-radius: 0 4px 4px 0;
   cursor: pointer;
   font-weight: 600;
-  background-color: transparent; /* полностью прозрачный */
+  background-color: transparent;
   color: white;
   transition: color 0.3s, transform 0.2s;
 }
 
 .search-bar button:hover {
-  color: #ffd; /* чуть светлее при наведении */
+  color: #ffd;
   transform: scale(1.05);
+}
+
+/* Подсказки */
+.suggestions-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.6); /* полупрозрачный, чтобы на фоне выглядело */
+  color: white;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-radius: 0 0 4px 4px;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.suggestion-item {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+.suggestion-item.active {
+  background-color: rgba(255, 255, 255, 0.2);
 }

@@ -1,3 +1,18 @@
+/* Мобильный статус сверху, чуть ниже и без фона */
+.mobile-status {
+  position: absolute;
+  top: 78px; /* чуть ниже верха экрана */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  color: white; /* цвет текста */
+  font-size: 29px; /* чуть больше */
+  font-weight: 600; /* чуть жирнее для читаемости */
+  text-align: center;
+  pointer-events: none; /* чтобы не мешал кликам */
+  /* фон убран */
+}
+
 @media (max-width: 768px) {
   .weather-container {
     flex-direction: column;
@@ -11,10 +26,10 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* выравниваем по центру по вертикали */
-    align-items: center; /* выравниваем по центру по горизонтали */
+    justify-content: center;
+    align-items: center;
     text-align: center;
-    gap: 10px; /* расстояние между температурой, городом и временем */
+    gap: 10px;
   }
 
   .right-panel {
@@ -28,22 +43,35 @@
     justify-content: flex-start;
   }
 
-  /* размеры текста и цифр под мобильные устройства */
   .temperature {
-    font-size: 60px; /* чуть больше, чем 48px */
+    font-size: 50px;
   }
 
   .location {
-    font-size: 28px; /* увеличено для читаемости */
+    font-size: 22px;
   }
 
   .current-time {
-    font-size: 18px; /* время под городом */
+    font-size: 18px;
     margin-top: 5px;
   }
 
+  /* Иконки погоды теперь управляются через font-size */
   .weather-icon {
     margin-top: 10px;
-    font-size: 60px; /* увеличиваем иконку для мобильных */
+    font-size: 30px; /* уменьшенный размер для мобильных */
+    width: auto;
+    height: auto;
+  }
+
+  /* Если есть специальные анимации, убедимся, что они не ломают размер */
+  .sun-icon,
+  .cloud-icon,
+  .rain-icon,
+  .thunder-icon,
+  .snow-icon,
+  .fog-icon {
+    width: 1em;
+    height: 1em;
   }
 }
