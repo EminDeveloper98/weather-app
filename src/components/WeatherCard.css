@@ -1,4 +1,3 @@
-/* WeatherCard.css */
 .weather-container {
   display: flex;
   height: 100vh;
@@ -9,7 +8,6 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
-/* Фон */
 .bg-video {
   position: absolute;
   top: 0;
@@ -20,7 +18,6 @@
   z-index: 0;
 }
 
-/* Левая и правая панели */
 .left-panel,
 .right-panel {
   position: relative;
@@ -28,34 +25,31 @@
   padding: 40px;
 }
 
-/* Левая панель: температура, город, иконка в ряд и внизу */
 .left-panel {
   flex: 7;
   display: flex;
-  align-items: center; /* горизонтальное выравнивание */
+  align-items: center;
   gap: 30px;
-  margin-top: auto; /* сдвигаем в самый низ */
-  padding-bottom: 80px; /* отступ от низа */
+  margin-top: auto;
+  padding-bottom: 80px;
 }
 
 .city-time {
   display: flex;
-  flex-direction: column; /* город и время друг под другом */
-  width: 100%; /* теперь Textfit учитывает ширину */
-  max-width: 400px; /* ограничение, чтобы не раздувало слишком сильно */
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px;
 }
 
-/* Подстройка размера текста для Textfit */
 .location {
   font-weight: 400;
   color: #fff;
   text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
-
   display: block;
   width: 100%;
   line-height: 1.1;
-  white-space: nowrap; /* текст в одну строку */
-  overflow: hidden; /* скрываем выходящий текст */
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .current-time {
@@ -70,11 +64,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: scale(2);
   margin-top: 10px;
 }
 
-/* Правая панель: фиксируем вертикально по центру */
+.weather-svg-icon {
+  font-size: 80px; /* десктоп */
+}
+
 .right-panel {
   flex: 3;
   display: flex;
@@ -84,27 +80,6 @@
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-/* Для маленьких экранов оставляем вертикальный порядок */
-@media (max-width: 768px) {
-  .weather-container {
-    flex-direction: column;
-  }
-
-  .left-panel {
-    justify-content: flex-start;
-    gap: 15px;
-    padding: 20px;
-  }
-
-  .right-panel {
-    width: 100%;
-    flex: none;
-    padding: 20px;
-    margin-top: auto;
-  }
-}
-
-/* Амбре затемнение слева */
 .weather-container::after {
   content: '';
   position: absolute;
@@ -125,45 +100,6 @@
   font-weight: 400;
 }
 
-.sun-icon {
-  animation: spin 20s linear infinite;
-}
-.cloud-icon {
-  animation: float 30s linear infinite;
-}
-.rain-icon {
-  animation: bounce 1s infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-@keyframes float {
-  0% {
-    transform: translateX(0px);
-  }
-  50% {
-    transform: translateX(20px);
-  }
-  100% {
-    transform: translateX(0px);
-  }
-}
-@keyframes bounce {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
 .footer {
   position: absolute;
   bottom: 10px;
@@ -174,7 +110,6 @@
   z-index: 5;
 }
 
-/* Иконка в левом верхнем углу */
 .logo-icon {
   position: absolute;
   top: 20px;
@@ -193,14 +128,15 @@
   text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
 }
 
-.status-message {
-  position: fixed;
-  top: 62%;
+.mobile-status {
+  position: absolute;
+  top: 78px;
   left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 46px;
+  transform: translateX(-50%);
+  z-index: 100;
   color: white;
+  font-size: 29px;
+  font-weight: 600;
   text-align: center;
-  z-index: 10;
-  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
 }

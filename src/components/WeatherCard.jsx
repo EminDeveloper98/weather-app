@@ -38,15 +38,17 @@ const WeatherCard = () => {
 
   const getWeatherIcon = (icon) => {
     if (!icon) return null;
-    if (icon.startsWith('01')) return <WiDaySunny size={80} />;
+    if (icon.startsWith('01'))
+      return <WiDaySunny className="weather-svg-icon" />;
     if (icon.startsWith('02') || icon.startsWith('03') || icon.startsWith('04'))
-      return <WiCloudy size={80} />;
+      return <WiCloudy className="weather-svg-icon" />;
     if (icon.startsWith('09') || icon.startsWith('10'))
-      return <WiRainMix size={80} />;
-    if (icon.startsWith('11')) return <WiThunderstorm size={80} />;
-    if (icon.startsWith('13')) return <WiSnow size={80} />;
-    if (icon.startsWith('50')) return <WiFog size={80} />;
-    return <WiCloudy size={80} />;
+      return <WiRainMix className="weather-svg-icon" />;
+    if (icon.startsWith('11'))
+      return <WiThunderstorm className="weather-svg-icon" />;
+    if (icon.startsWith('13')) return <WiSnow className="weather-svg-icon" />;
+    if (icon.startsWith('50')) return <WiFog className="weather-svg-icon" />;
+    return <WiCloudy className="weather-svg-icon" />;
   };
 
   const getFullWeatherDescription = (main) => {
@@ -166,10 +168,10 @@ const WeatherCard = () => {
         <SearchBar
           onSearch={(newCity) => {
             setCity(newCity);
-            setWeatherData(null); // скрываем старые данные при поиске
+            setWeatherData(null);
           }}
           onInputChange={() => {
-            setWeatherData(null); // скрываем данные при вводе нового текста
+            setWeatherData(null);
           }}
         />
         {weatherData && !error && (

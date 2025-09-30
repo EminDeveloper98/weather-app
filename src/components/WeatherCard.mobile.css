@@ -1,18 +1,3 @@
-/* Мобильный статус сверху, чуть ниже и без фона */
-.mobile-status {
-  position: absolute;
-  top: 78px; /* чуть ниже верха экрана */
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 100;
-  color: white; /* цвет текста */
-  font-size: 29px; /* чуть больше */
-  font-weight: 600; /* чуть жирнее для читаемости */
-  text-align: center;
-  pointer-events: none; /* чтобы не мешал кликам */
-  /* фон убран */
-}
-
 @media (max-width: 768px) {
   .weather-container {
     flex-direction: column;
@@ -29,7 +14,29 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    gap: 10px;
+    gap: 8px;
+  }
+
+  .temperature {
+    font-size: 48px;
+  }
+
+  .location {
+    font-size: 26px;
+    font-weight: 500;
+    width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .current-time {
+    font-size: 16px;
+    margin-top: 3px;
+  }
+
+  .weather-svg-icon {
+    font-size: 40px; /* уменьшено для мобильных */
   }
 
   .right-panel {
@@ -43,35 +50,21 @@
     justify-content: flex-start;
   }
 
-  .temperature {
-    font-size: 50px;
+  .weather-full-description {
+    font-size: 15px;
+    line-height: 1.3;
+    margin-top: 12px;
+    text-align: center;
   }
 
-  .location {
-    font-size: 22px;
+  .footer {
+    font-size: 12px;
+    bottom: 5px;
   }
 
-  .current-time {
-    font-size: 18px;
-    margin-top: 5px;
-  }
-
-  /* Иконки погоды теперь управляются через font-size */
-  .weather-icon {
-    margin-top: 10px;
-    font-size: 30px; /* уменьшенный размер для мобильных */
-    width: auto;
-    height: auto;
-  }
-
-  /* Если есть специальные анимации, убедимся, что они не ломают размер */
-  .sun-icon,
-  .cloud-icon,
-  .rain-icon,
-  .thunder-icon,
-  .snow-icon,
-  .fog-icon {
-    width: 1em;
-    height: 1em;
+  .logo-icon {
+    width: 45px;
+    top: 8px;
+    left: 8px;
   }
 }
