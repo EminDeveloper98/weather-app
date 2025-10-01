@@ -16,6 +16,7 @@ import {
 
 import weatherIcon from '../assets/icons/weathericon.png';
 import bgWeather from '../assets/bg-weather.jpg';
+import bgWeatherMobile from '../assets/bg-weather-mobile.png';
 
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 
@@ -55,20 +56,20 @@ const WeatherCard = () => {
     if (!main) return '';
     switch (main.toLowerCase()) {
       case 'clouds':
-        return `Cloudy throughout the day. Morning showers stopped by noon. Afternoon remains overcast.`;
+        return 'Cloudy throughout the day. Morning showers stopped by noon. Afternoon remains overcast.';
       case 'rain':
-        return `Rain expected in the morning. Afternoon showers continue. Evening rain eases.`;
+        return 'Rain expected in the morning. Afternoon showers continue. Evening rain eases.';
       case 'snow':
-        return `Snow in the morning. Light snow in the afternoon. Clears by evening.`;
+        return 'Snow in the morning. Light snow in the afternoon. Clears by evening.';
       case 'clear':
-        return `Sunny all day. Evening gets cooler. No precipitation expected.`;
+        return 'Sunny all day. Evening gets cooler. No precipitation expected.';
       case 'thunderstorm':
-        return `Thunderstorms in the morning. Afternoon less intense. Clears by night.`;
+        return 'Thunderstorms in the morning. Afternoon less intense. Clears by night.';
       case 'mist':
       case 'fog':
-        return `Foggy in the morning. Clears by afternoon. Evening mist returns.`;
+        return 'Foggy in the morning. Clears by afternoon. Evening mist returns.';
       default:
-        return `Weather varies throughout the day.`;
+        return 'Weather varies throughout the day.';
     }
   };
 
@@ -136,10 +137,11 @@ const WeatherCard = () => {
         </div>
       )}
 
+      {/* Фон (меняется в зависимости от устройства) */}
       <div
         className="bg-video"
         style={{
-          backgroundImage: `url(${bgWeather})`,
+          backgroundImage: `url(${isMobile ? bgWeatherMobile : bgWeather})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
