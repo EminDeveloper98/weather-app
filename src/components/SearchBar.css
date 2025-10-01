@@ -52,7 +52,6 @@
   left: 0;
   right: 0;
   background: rgba(0, 0, 0, 0.6);
-  color: white;
   list-style: none;
   padding: 0;
   margin: 4px 0 0 0;
@@ -65,9 +64,24 @@
 .suggestion-item {
   padding: 8px 12px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .suggestion-item:hover,
 .suggestion-item.active {
   background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Город жирным белым */
+.city-name {
+  font-weight: bold;
+  color: white;
+}
+
+/* Страна/регион серым */
+.country-name {
+  font-weight: normal;
+  color: rgba(255, 255, 255, 0.6);
 }

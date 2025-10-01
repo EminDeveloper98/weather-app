@@ -25,6 +25,7 @@ const WeatherCard = () => {
   const [weatherData, setWeatherData] = useState(null);
   const [currentTime, setCurrentTime] = useState('');
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false); // 🔹 добавили
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [inputFocused, setInputFocused] = useState(false);
 
@@ -96,6 +97,7 @@ const WeatherCard = () => {
     const fetchWeather = async () => {
       try {
         setError(false);
+        setLoading(true); // 🔹 старт загрузки
         const res = await fetch(
           `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
             city
@@ -106,6 +108,7 @@ const WeatherCard = () => {
         if (data.cod !== 200) {
           setWeatherData(null);
           setError(true);
+          setLoading(false); // 🔹 конец загрузки
           return;
         }
 
@@ -120,9 +123,11 @@ const WeatherCard = () => {
           mainDescription: data.weather[0].main,
           name: data.name,
         });
+        setLoading(false); // 🔹 конец загрузки
       } catch {
         setWeatherData(null);
         setError(true);
+        setLoading(false); // 🔹 конец загрузки
       }
     };
 
@@ -131,13 +136,6 @@ const WeatherCard = () => {
 
   return (
     <div className="weather-container">
-      {/* Мобильный статус сверху */}
-      {isMobile && (error || !weatherData) && (
-        <div className="mobile-status">
-          {error ? 'City not found' : 'Loading...'}
-        </div>
-      )}
-
       {/* Фон */}
       <div
         className="bg-video"
@@ -151,7 +149,7 @@ const WeatherCard = () => {
       <img src={weatherIcon} alt="logo" className="logo-icon" />
 
       <div className="left-panel">
-        {weatherData && !error && (
+        {weatherData && !error && !loading && (
           <>
             <div className="temperature">{formatTemp(weatherData.temp)}°</div>
             <div className="city-time">
@@ -184,7 +182,8 @@ const WeatherCard = () => {
           onFocus={() => setInputFocused(true)}
           onBlur={() => setInputFocused(false)}
         />
-        {weatherData && !error && (
+
+        {weatherData && !error && !loading && (
           <>
             <WeatherDetails
               humidity={weatherData.humidity}
@@ -200,6 +199,13 @@ const WeatherCard = () => {
           </>
         )}
       </div>
+
+      {/* 🔹 Сообщения внизу */}
+      {(loading || error) && (
+        <div className="bottom-status">
+          {loading ? 'Loading...' : 'City not found'}
+        </div>
+      )}
 
       <footer className="footer">
         &copy; {new Date().getFullYear()} All rights reserved

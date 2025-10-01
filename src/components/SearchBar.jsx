@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import './SearchBar.css';
+import { countryNames } from './CountryNames';
 
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 
@@ -108,23 +109,23 @@ const SearchBar = ({ onSearch, onInputChange, onFocus, onBlur }) => {
 
         {showSuggestions && suggestions.length > 0 && (
           <ul className="suggestions-list">
-            {suggestions.map((city, index) => {
-              const region = city.state ? `, ${city.state}` : '';
-              const country = city.country ? `, ${city.country}` : '';
-              return (
-                <li
-                  key={index}
-                  onClick={() => handleSelect(city)}
-                  className={`suggestion-item ${
-                    index === activeIndex ? 'active' : ''
-                  }`}
-                >
-                  {city.name}
-                  {region}
-                  {country}
-                </li>
-              );
-            })}
+            {suggestions.map((city, index) => (
+              <li
+                key={index}
+                onClick={() => handleSelect(city)}
+                className={`suggestion-item ${
+                  index === activeIndex ? 'active' : ''
+                }`}
+              >
+                <span className="city-name">{city.name}</span>
+                {city.country && (
+                  <span className="country-name">
+                    {city.state ? `, ${city.state}` : ''},{' '}
+                    {countryNames[city.country] || city.country}
+                  </span>
+                )}
+              </li>
+            ))}
           </ul>
         )}
       </div>
