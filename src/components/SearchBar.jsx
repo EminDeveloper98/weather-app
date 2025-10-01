@@ -3,15 +3,13 @@ import './SearchBar.css';
 
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 
-const SearchBar = ({ onSearch, onInputChange }) => {
+const SearchBar = ({ onSearch, onInputChange, onFocus, onBlur }) => {
   const [input, setInput] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
-
   const containerRef = useRef(null);
 
-  // Получение подсказок
   useEffect(() => {
     if (!input) {
       setSuggestions([]);
@@ -41,7 +39,6 @@ const SearchBar = ({ onSearch, onInputChange }) => {
     return () => clearTimeout(timeoutId);
   }, [input]);
 
-  // Клик вне компонента закрывает подсказки
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (containerRef.current && !containerRef.current.contains(e.target)) {
@@ -57,7 +54,7 @@ const SearchBar = ({ onSearch, onInputChange }) => {
     setShowSuggestions(false);
     setActiveIndex(-1);
     onSearch(city.name);
-    setInput(''); // очищаем поле
+    setInput('');
   };
 
   const handleSearch = (e) => {
@@ -72,7 +69,6 @@ const SearchBar = ({ onSearch, onInputChange }) => {
 
   const handleKeyDown = (e) => {
     if (!showSuggestions || suggestions.length === 0) return;
-
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       setActiveIndex((prev) => (prev + 1) % suggestions.length);
@@ -92,46 +88,46 @@ const SearchBar = ({ onSearch, onInputChange }) => {
   };
 
   return (
-    <div
-      className="search-bar-container"
-      ref={containerRef}
-      style={{ position: 'relative' }}
-    >
-      <form className="search-bar" onSubmit={handleSearch}>
-        <input
-          type="text"
-          placeholder="Enter city"
-          value={input}
-          onChange={(e) => {
-            setInput(e.target.value);
-            if (onInputChange) onInputChange(e.target.value);
-          }}
-          onKeyDown={handleKeyDown}
-        />
-        <button type="submit">Search</button>
-      </form>
+    <div className="search-bar-container" ref={containerRef}>
+      <div className="input-wrapper">
+        <form className="search-bar" onSubmit={handleSearch}>
+          <input
+            type="text"
+            placeholder="Enter city"
+            value={input}
+            onChange={(e) => {
+              setInput(e.target.value);
+              if (onInputChange) onInputChange(e.target.value);
+            }}
+            onKeyDown={handleKeyDown}
+            onFocus={onFocus}
+            onBlur={onBlur}
+          />
+          <button type="submit">Search</button>
+        </form>
 
-      {showSuggestions && suggestions.length > 0 && (
-        <ul className="suggestions-list">
-          {suggestions.map((city, index) => {
-            const region = city.state ? `, ${city.state}` : '';
-            const country = city.country ? `, ${city.country}` : '';
-            return (
-              <li
-                key={index}
-                onClick={() => handleSelect(city)}
-                className={`suggestion-item ${
-                  index === activeIndex ? 'active' : ''
-                }`}
-              >
-                {city.name}
-                {region}
-                {country}
-              </li>
-            );
-          })}
-        </ul>
-      )}
+        {showSuggestions && suggestions.length > 0 && (
+          <ul className="suggestions-list">
+            {suggestions.map((city, index) => {
+              const region = city.state ? `, ${city.state}` : '';
+              const country = city.country ? `, ${city.country}` : '';
+              return (
+                <li
+                  key={index}
+                  onClick={() => handleSelect(city)}
+                  className={`suggestion-item ${
+                    index === activeIndex ? 'active' : ''
+                  }`}
+                >
+                  {city.name}
+                  {region}
+                  {country}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };

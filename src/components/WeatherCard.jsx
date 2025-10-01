@@ -26,6 +26,7 @@ const WeatherCard = () => {
   const [currentTime, setCurrentTime] = useState('');
   const [error, setError] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [inputFocused, setInputFocused] = useState(false);
 
   // Проверка мобильного экрана
   useEffect(() => {
@@ -137,7 +138,7 @@ const WeatherCard = () => {
         </div>
       )}
 
-      {/* Фон (меняется в зависимости от устройства) */}
+      {/* Фон */}
       <div
         className="bg-video"
         style={{
@@ -166,15 +167,22 @@ const WeatherCard = () => {
         )}
       </div>
 
-      <div className="right-panel">
+      <div
+        className="right-panel"
+        style={{
+          transform:
+            isMobile && inputFocused ? 'translateY(-150px)' : 'translateY(0)',
+          transition: 'transform 0.3s ease',
+        }}
+      >
         <SearchBar
           onSearch={(newCity) => {
             setCity(newCity);
             setWeatherData(null);
           }}
-          onInputChange={() => {
-            setWeatherData(null);
-          }}
+          onInputChange={() => setWeatherData(null)}
+          onFocus={() => setInputFocused(true)}
+          onBlur={() => setInputFocused(false)}
         />
         {weatherData && !error && (
           <>
