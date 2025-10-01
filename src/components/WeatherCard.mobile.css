@@ -24,7 +24,7 @@
   .location {
     font-size: 26px;
     font-weight: 500;
-    width: 90%;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-align: center;
@@ -36,7 +36,7 @@
   }
 
   .weather-svg-icon {
-    font-size: 40px; /* уменьшено для мобильных */
+    font-size: 70px; /* уменьшено для мобильных */
   }
 
   .right-panel {

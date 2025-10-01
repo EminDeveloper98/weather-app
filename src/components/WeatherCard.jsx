@@ -42,16 +42,18 @@ const WeatherCard = () => {
   const getWeatherIcon = (icon) => {
     if (!icon) return null;
     if (icon.startsWith('01'))
-      return <WiDaySunny className="weather-svg-icon" />;
+      return <WiDaySunny className="weather-svg-icon sun" />;
     if (icon.startsWith('02') || icon.startsWith('03') || icon.startsWith('04'))
-      return <WiCloudy className="weather-svg-icon" />;
+      return <WiCloudy className="weather-svg-icon cloud" />;
     if (icon.startsWith('09') || icon.startsWith('10'))
-      return <WiRainMix className="weather-svg-icon" />;
+      return <WiRainMix className="weather-svg-icon rain" />;
     if (icon.startsWith('11'))
-      return <WiThunderstorm className="weather-svg-icon" />;
-    if (icon.startsWith('13')) return <WiSnow className="weather-svg-icon" />;
-    if (icon.startsWith('50')) return <WiFog className="weather-svg-icon" />;
-    return <WiCloudy className="weather-svg-icon" />;
+      return <WiThunderstorm className="weather-svg-icon thunder" />;
+    if (icon.startsWith('13'))
+      return <WiSnow className="weather-svg-icon snow" />;
+    if (icon.startsWith('50'))
+      return <WiFog className="weather-svg-icon fog" />;
+    return <WiCloudy className="weather-svg-icon cloud" />;
   };
 
   const getFullWeatherDescription = (main) => {
