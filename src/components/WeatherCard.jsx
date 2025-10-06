@@ -25,7 +25,7 @@ const WeatherCard = () => {
   const [weatherData, setWeatherData] = useState(null);
   const [currentTime, setCurrentTime] = useState('');
   const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false); // 🔹 добавили
+  const [loading, setLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [inputFocused, setInputFocused] = useState(false);
 
@@ -99,7 +99,7 @@ const WeatherCard = () => {
     const fetchWeather = async () => {
       try {
         setError(false);
-        setLoading(true); // 🔹 старт загрузки
+        setLoading(true);
         const res = await fetch(
           `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
             city
@@ -110,7 +110,7 @@ const WeatherCard = () => {
         if (data.cod !== 200) {
           setWeatherData(null);
           setError(true);
-          setLoading(false); // 🔹 конец загрузки
+          setLoading(false);
           return;
         }
 
@@ -125,11 +125,11 @@ const WeatherCard = () => {
           mainDescription: data.weather[0].main,
           name: data.name,
         });
-        setLoading(false); // 🔹 конец загрузки
+        setLoading(false);
       } catch {
         setWeatherData(null);
         setError(true);
-        setLoading(false); // 🔹 конец загрузки
+        setLoading(false);
       }
     };
 
@@ -151,19 +151,26 @@ const WeatherCard = () => {
       <img src={weatherIcon} alt="logo" className="logo-icon" />
 
       <div className="left-panel">
-        {weatherData && !error && !loading && (
-          <>
-            <div className="temperature">{formatTemp(weatherData.temp)}°</div>
-            <div className="city-time">
-              <Textfit mode="single" max={66} min={24} className="location">
-                {weatherData.name}
-              </Textfit>
-              <div className="current-time">{currentTime}</div>
-            </div>
-            <div className="weather-icon">
-              {getWeatherIcon(weatherData.icon)}
-            </div>
-          </>
+        {/* Сообщения Loading / Error или данные погоды */}
+        {loading || error ? (
+          <div className="city-status">
+            {loading ? 'Loading...' : 'City not found'}
+          </div>
+        ) : (
+          weatherData && (
+            <>
+              <div className="temperature">{formatTemp(weatherData.temp)}°</div>
+              <div className="city-time">
+                <Textfit mode="single" max={66} min={24} className="location">
+                  {weatherData.name}
+                </Textfit>
+                <div className="current-time">{currentTime}</div>
+              </div>
+              <div className="weather-icon">
+                {getWeatherIcon(weatherData.icon)}
+              </div>
+            </>
+          )
         )}
       </div>
 
@@ -201,13 +208,6 @@ const WeatherCard = () => {
           </>
         )}
       </div>
-
-      {/* 🔹 Сообщения внизу */}
-      {(loading || error) && (
-        <div className="bottom-status">
-          {loading ? 'Loading...' : 'City not found'}
-        </div>
-      )}
 
       <footer className="footer">
         &copy; {new Date().getFullYear()} All rights reserved

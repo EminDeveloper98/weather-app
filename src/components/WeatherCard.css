@@ -197,3 +197,15 @@
 .weather-svg-icon.rain {
   animation: rainDrop 1s ease-in-out infinite;
 }
+.city-status {
+  font-size: 36px; /* размер для десктопа */
+  font-weight: 600;
+  text-align: center;
+  color: white;
+  position: absolute; /* чтобы позиционировать внутри left-panel */
+  bottom: 80px; /* чуть выше низа */
+  left: 72.5%; /* центр по горизонтали */
+  transform: translateX(-50%);
+  text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.7);
+  z-index: 10;
+}
