@@ -1,12 +1,41 @@
-# React + Vite
+# 🌤️ Weather App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 📝 Description
+A fast and responsive **Weather Application** built with **React.js**, **Vite**, and **Yarn**.  
+It allows users to search for any city and get real-time weather information including temperature, humidity, wind speed, and weather description.  
+The app uses the **OpenWeatherMap API** to provide accurate and up-to-date weather data.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
+- 🌍 Search weather by **city name**  
+- 🌡️ Shows **temperature, humidity, wind speed, and weather conditions**  
+- ⚡ Powered by **Vite** for ultra-fast development and build  
+- 💻 Modern **React.js** component-based architecture  
+- 🎨 Clean and responsive **CSS styling**  
+- ❌ Error handling for invalid city names  
+- 📱 Fully responsive on all devices  
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🧠 Technologies Used
+- **React.js** – front-end framework  
+- **Vite** – build tool for fast development  
+- **Yarn** – package manager  
+- **HTML5 & CSS3** – markup and styling  
+- **OpenWeatherMap API** – for real-time weather data  
+
+---
+
+## 🌐 Live Demo
+🚀 **Try it here:**  
+[https://emindeveloper98.github.io/weather-app/](https://emindeveloper98.github.io/weather-app/)
+
+---
+
+## ⚙️ Installation and Setup
+Follow these steps to run the project locally:
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/emindeveloper98/weather-app.git
