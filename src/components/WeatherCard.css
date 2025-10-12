@@ -1,3 +1,4 @@
+/* Основной контейнер */
 .weather-container {
   display: flex;
   height: 100vh;
@@ -8,6 +9,7 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
+/* Фоновое видео */
 .bg-video {
   position: absolute;
   top: 0;
@@ -18,22 +20,48 @@
   z-index: 0;
 }
 
+/* Панели */
 .left-panel,
 .right-panel {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   padding: 40px;
 }
 
 .left-panel {
   flex: 7;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 30px;
-  margin-top: auto;
   padding-bottom: 80px;
 }
 
+.right-panel {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  backdrop-filter: blur(5px);
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Градиент поверх видео */
+.weather-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0) 30%
+  );
+  z-index: 1;
+}
+
+/* Время и город */
 .city-time {
   display: flex;
   flex-direction: column;
@@ -45,8 +73,6 @@
   font-weight: 400;
   color: #fff;
   text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
-  display: block;
-  width: 100%;
   line-height: 1.1;
   white-space: nowrap;
   overflow: hidden;
@@ -60,6 +86,7 @@
   margin-top: 5px;
 }
 
+/* Иконка погоды */
 .weather-icon {
   display: flex;
   align-items: center;
@@ -68,58 +95,16 @@
 }
 
 .weather-svg-icon {
-  font-size: 120px; /* десктоп */
+  font-size: 120px;
 }
 
-.right-panel {
-  flex: 3;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  backdrop-filter: blur(5px);
-  background-color: rgba(0, 0, 0, 0.2);
-}
-
-.weather-container::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0.5) 0%,
-    rgba(0, 0, 0, 0) 30%
-  );
-  z-index: 0;
-}
-
+/* Температура */
 .temperature {
   font-size: 128px;
   font-weight: 400;
 }
 
-.footer {
-  position: absolute;
-  bottom: 10px;
-  width: 100%;
-  text-align: center;
-  color: white;
-  font-size: 14px;
-  z-index: 5;
-}
-
-.logo-icon {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  width: 80px;
-  height: auto;
-  z-index: 10;
-  object-fit: contain;
-}
-
+/* Описание погоды */
 .weather-full-description {
   margin-top: 20px;
   font-size: 18px;
@@ -128,6 +113,7 @@
   text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
 }
 
+/* Статусы */
 .mobile-status {
   position: absolute;
   top: 78px;
@@ -140,6 +126,7 @@
   text-align: center;
   pointer-events: none;
 }
+
 .bottom-status {
   position: absolute;
   bottom: 290px;
@@ -152,7 +139,63 @@
   text-align: center;
   text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.7);
 }
-/* Вращающееся солнце */
+
+.city-status {
+  font-size: 36px;
+  font-weight: 600;
+  text-align: center;
+  color: white;
+  position: absolute;
+  bottom: 80px;
+  left: 72.5%;
+  transform: translateX(-50%);
+  text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.7);
+  z-index: 10;
+}
+
+/* Логотип */
+.logo-icon {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 80px;
+  height: auto;
+  z-index: 10;
+  object-fit: contain;
+}
+
+/* Footer */
+.footer {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  text-align: center;
+  z-index: 10;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  color: #fff;
+  animation: fadeInFooter 1s ease-in;
+}
+
+.footer span.footer-name {
+  font-weight: bold;
+  font-size: 16px;
+  color: #ab8c04;
+}
+
+/* Плавное появление footer */
+@keyframes fadeInFooter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Анимации */
 @keyframes rotate {
   from {
     transform: rotate(0deg);
@@ -166,7 +209,6 @@
   animation: rotate 10s linear infinite;
 }
 
-/* Лёгкое покачивание облаков */
 @keyframes sway {
   0%,
   100% {
@@ -181,7 +223,6 @@
   animation: sway 6s ease-in-out infinite;
 }
 
-/* Можно добавить простую мерцающую анимацию для дождя */
 @keyframes rainDrop {
   0%,
   100% {
@@ -196,16 +237,4 @@
 
 .weather-svg-icon.rain {
   animation: rainDrop 1s ease-in-out infinite;
-}
-.city-status {
-  font-size: 36px; /* размер для десктопа */
-  font-weight: 600;
-  text-align: center;
-  color: white;
-  position: absolute; /* чтобы позиционировать внутри left-panel */
-  bottom: 80px; /* чуть выше низа */
-  left: 72.5%; /* центр по горизонтали */
-  transform: translateX(-50%);
-  text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.7);
-  z-index: 10;
 }
