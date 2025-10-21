@@ -15,7 +15,7 @@ import {
 } from 'react-icons/wi';
 
 import weatherIcon from '../assets/icons/weathericon.png';
-import bgWeather from '../assets/snow.jpg';
+import bgWeather from '../assets/bg-weather.png';
 import bgWeatherMobile from '../assets/bg-weather-mobile.png';
 
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
@@ -210,7 +210,7 @@ const WeatherCard = () => {
       </div>
 
       <footer className="footer">
-        Created by <span className="footer-name">EminDeveloper</span> &copy;{' '}
+        {/* Created by <span className="footer-name">EminDeveloper</span> &copy;{' '} */}
         {new Date().getFullYear()} All rights reserved
       </footer>
     </div>
